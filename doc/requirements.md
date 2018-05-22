@@ -18,6 +18,11 @@ is known to accommodate the concept of guest-driven sharing.)
 
 `otherdisk` is the address of the disk on the owning virtual machine.
 
+If the disk is partitioned and a specific partition is desired,
+the syntax might be:
+
+    cd /auto/vmlink/othervmid.otherdisk.partition
+
 ## Automounter Sequence
 
 The steps the script must handle include:
