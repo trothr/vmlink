@@ -2,6 +2,9 @@
 
 VMLINK Automounter for Linux on z/VM
 
+VMLINK extends the namespace of a virtual machine to include 
+devices of (specifically disks owned by) other virtual machines.
+
 ## VMLINK Automounter
 
 Consider automounter point `/vmlink`, similar to `/misc` and `/net`.
@@ -14,4 +17,15 @@ and "addr" is the address of a disk on that virtual machine.
 The VMLINK automounter script uses the key, here `yourvm.yourdisk`,
 to "link" (at the z/VM layer) your disk, bring it online,
 and then mount it at the named location under the automounter point.
+
+## VMLINK Concept
+
+VMLINK automates referencing disks of other virtual machines
+on demand of the "client" guest. Host administrative action
+is required for authorizing such references. Host administration
+is not required for activating such references once authorized.
+
+In other words, you must be granted the right to use another disk,
+but once authorized you do not have to engage the administrator
+to use a disk for which you are authorized.
 
