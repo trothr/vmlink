@@ -29,3 +29,10 @@ In other words, you must be granted the right to use another disk,
 but once authorized you do not have to engage the administrator
 to use a disk for which you are authorized.
 
+## VMLINK Project
+
+Rushal Verma is developing the VMLINK automounter script as an intern project
+under the Linux Foundation. Weekly status is maintained here:
+
+https://docs.google.com/document/d/1E1UOcMKoqYWU_cfNOGwl8sFxOs5APxe8CVb53m3Iv_Q
+
