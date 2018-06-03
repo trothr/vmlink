@@ -9,7 +9,7 @@ devices of (specifically disks owned by) other virtual machines.
 
 Consider automounter point `/vmlink`, similar to `/misc` and `/net`.
 Under `/vmlink`, one can have target directories ("keys" in automounter speak)
-named vmid.addr where "vmid" is the owning virtual machine
+named *vmid.addr* where "vmid" is the owning virtual machine
 and "addr" is the address of a disk on that virtual machine.
 
 ## cd /vmlink/yourvm.yourdisk
