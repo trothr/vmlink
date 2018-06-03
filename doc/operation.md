@@ -27,8 +27,8 @@ For example, the CMS "EDF" minidisk filesystem occupies the entire disk.
 Other filesystems may also start at offset zero and may or may not obscure the partition table.
 
 If no partition is specified, the VMLINK automounter script must attempt both
-"whole disk" and "partition one" (order to be determined). If a specific partition was
-indicated, then the script must succeed in mounting that partition or must fail the operation.
-
+"whole disk" and "partition one". The order of the attempts is yet to be determined
+and might not matter since only one should succeed. If a specific partition was indicated,
+then the script must succeed in mounting that partition or must fail the operation.
 
 
