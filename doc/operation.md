@@ -6,7 +6,7 @@ The basic flow is as follows:
 * the script loads its optional configuration, if any
 * the script parses the key into *vmid*, *addr*, and optionally *partition*
 * next, the script looks for an available (unused) I/O address (local address)
-* it attempts to link the target *vmid* and *addr* at that local address
+* it attempts to link the target *vmid* and *addr* to that local address
 * if the link was successful, then the script varies the new disk (local address) online
 * if the online was successful, the script must find the block device assigned
 * if the block device was found, the script finally attempts to mount it (or a partition)
