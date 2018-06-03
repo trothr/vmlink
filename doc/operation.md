@@ -4,7 +4,7 @@ The basic flow is as follows:
 
 * a user references a file or directory triggering the script
 * the script loads its optional configuration, if any
-* the script parses the key into *vmid*, *addr*, and optionally *partition*
+* the script parses the key `$1` into *vmid*, *addr*, and optionally *partition*
 * next, the script looks for an available (unused) I/O address (local address)
 * it attempts to link the target *vmid* and *addr* to that local address
 * if the link was successful, then the script varies the new disk (local address) online
