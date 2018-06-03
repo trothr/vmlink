@@ -14,10 +14,11 @@ The basic flow is as follows:
 ## Clean-up:
 
 The script should check if a disk being linked has already been linked.
-That must happen before the new (redundant) link is varied online.
+To be effective, that check must happen before the new (redundant) link is varied online.
+Skipping this check is not a hindrance to operation. Performing this check makes for good hygiene.
 
 The script should periodically vary-off and detach (unlink) disks which
-have become unmounted.
+have become unmounted. This too makes for good hygiene but is not vital to operation.
 
 ## Partitioning:
 
