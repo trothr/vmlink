@@ -1,0 +1,37 @@
+#!/bin/bash
+
+SLOT=9000
+
+while true ; do
+  vmcp q v $SLOT 1> /dev/null 2> /dev/null ; RC=$?
+  if [ $RC -ne 0 ] ; then break ; fi
+  SLOT=`expr $SLOT + 1`
+done
+
+# echo $SLOT
+# printf "%x\n" $((SLOT))
+
+KEY=$1
+IFS=. components=(${KEY})
+VMID=${components[0]}
+ADDR=${components[1]}
+PARTITION=${components[2]}
+
+# echo $VMID
+# echo $ADDR
+# echo $PARTITION
+
+vmcp link $VMID $ADDR $PARTITION $SLOT 
+
+echo 1 > /sys/bus/ccw/devices/0.0.$SLOT/online 1> /dev/null 2> /dev/null ;
+
+NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.)
+DIR=$RANDOM
+
+mkdir /media/$DIR
+
+mount /dev/$NAME /media/$DIR 1> /dev/null 2> /dev/null ;
+
+cd /media/$DIR
+
+exit
