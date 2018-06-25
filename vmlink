@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# ensure running as root
+if [ "$(id -u)" != "0" ]; then
+  exec sudo "$0" "$@"
+fi
+
+# arbitrary address
 SLOT=9000
 
+# finding a slot which is not linked any I/O address
 while true ; do
+  
   vmcp q v $SLOT 1> /dev/null 2> /dev/null ; RC=$?
+  
+  # if exit code is not 0
   if [ $RC -ne 0 ] ; then break ; fi
+  # update the address  
   SLOT=`expr $SLOT + 1`
 done
 
@@ -12,24 +23,29 @@ done
 # printf "%x\n" $((SLOT))
 
 KEY=$1
-IFS=. components=(${KEY})
+# parsing the key given into vmid, address and partition
+components=($(echo "$KEY" | awk -F. '{print VMID=$1, ADDR=$2, PARTITION=$3}'))
 VMID=${components[0]}
 ADDR=${components[1]}
 PARTITION=${components[2]}
 
-# echo $VMID
-# echo $ADDR
-# echo $PARTITION
+#echo $VMID
+#echo $ADDR
+#echo $PARTITION
 
+# link the given key to the address which is empty
 vmcp link $VMID $ADDR $PARTITION $SLOT 
 
+# vary the disk online
 echo 1 > /sys/bus/ccw/devices/0.0.$SLOT/online 1> /dev/null 2> /dev/null ;
 
+# find the block name assigned to it
 NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.)
 DIR=$RANDOM
 
 mkdir /media/$DIR
 
+# mount the block name to a random directory
 mount /dev/$NAME /media/$DIR 1> /dev/null 2> /dev/null ;
 
 cd /media/$DIR
