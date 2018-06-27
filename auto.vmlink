@@ -1,0 +1,53 @@
+#!/bin/bash
+
+date '+# %Y-%m-%d %H:%M:%S' >> /var/log/vmlink.log
+
+# arbitrary address
+SLOT=9000
+
+# finding a slot which is not linked any I/O address
+while true ; do
+
+  vmcp q v $SLOT 1> /dev/null 2> /dev/null ; RC=$?
+
+  # if exit code is not 0
+  if [ $RC -ne 0 ] ; then break ; fi
+  # update the address  
+  SLOT=`expr $SLOT + 1`
+done
+
+echo $SLOT >> /var/log/vmlink.log
+# printf "%x\n" $((SLOT))
+
+KEY=$1 >> /var/log/vmlink.log
+# parsing the key given into vmid, address and partition
+components=($(echo "$KEY" | awk -F. '{print VMID=$1, ADDR=$2, PARTITION=$3}'))
+VMID=${components[0]}
+ADDR=${components[1]}
+PARTITION=${components[2]}
+
+#echo $VMID
+#echo $ADDR
+#echo $PARTITION
+
+# link the given key to the address which is empty
+vmcp link $VMID $ADDR $PARTITION $SLOT >> /var/log/vmlink.log ;
+
+# vary the disk online
+echo 1 > /sys/bus/ccw/devices/0.0.$SLOT/online ; RC=$?
+if [ $RC -ne 0 ] ; then echo "please use chccwdev command to make the disk online" >> /var/log/vmlink.log
+else echo "disk is online at $SLOT" >> /var/log/vmlink.log ; fi
+
+# find the block name assigned to it
+NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.) ; RC=$?
+if [ $RC -ne 0 ] ; then echo "check the block name manually" >> /var/log/vmlink.log ; else echo "block name is $NAME" >> /var/log/vmlink.log ; fi
+
+if [ ! -d /media/$KEY ] ; then mkdir /media/$KEY ; else rm -rf /media/$KEY/* ; fi
+
+# mount the block name to a random directory
+mount -r /dev/$NAME /media/$KEY >> /var/log/vmlink.log ; RC=$?
+# if [ $RC -ne 0 ] ; then echo "mount manually" ; fi
+
+echo please run this command cd /media/$KEY to move to the disk
+
+exit
