@@ -42,12 +42,10 @@ else echo "disk is online at $SLOT" >> /var/log/vmlink.log ; fi
 NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.) ; RC=$?
 if [ $RC -ne 0 ] ; then echo "check the block name manually" >> /var/log/vmlink.log ; else echo "block name is $NAME" >> /var/log/vmlink.log ; fi
 
-if [ ! -d /media/$KEY ] ; then mkdir /media/$KEY ; else rm -rf /media/$KEY/* ; fi
+if [ ! -d $KEY ] ; then mkdir $KEY ; fi
 
 # mount the block name to a random directory
-mount -r /dev/$NAME /media/$KEY >> /var/log/vmlink.log ; RC=$?
+mount -r /dev/$NAME $KEY >> /var/log/vmlink.log ; RC=$?
 # if [ $RC -ne 0 ] ; then echo "mount manually" ; fi
-
-echo please run this command cd /media/$KEY to move to the disk
 
 exit
