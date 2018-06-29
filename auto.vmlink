@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 date '+# %Y-%m-%d %H:%M:%S' >> /var/log/vmlink.log
 
@@ -21,17 +21,15 @@ echo $SLOT >> /var/log/vmlink.log
 
 KEY=$1 >> /var/log/vmlink.log
 # parsing the key given into vmid, address and partition
-components=($(echo "$KEY" | awk -F. '{print VMID=$1, ADDR=$2, PARTITION=$3}'))
-VMID=${components[0]}
-ADDR=${components[1]}
-PARTITION=${components[2]}
-
-#echo $VMID
-#echo $ADDR
-#echo $PARTITION
+VMID=$(echo $KEY | awk -F. '{print $1}')
+ADDR=$(echo $KEY | awk -F. '{print $2}')
+PARTITION=$(echo $KEY | awk -F. '{print $3}')
+echo $VMID >> /var/log/vmlink.log
+echo $ADDR >> /var/log/vmlink.log
+echo $PARTITION >> /var/log/vmlink.log
 
 # link the given key to the address which is empty
-vmcp link $VMID $ADDR $PARTITION $SLOT >> /var/log/vmlink.log ;
+vmcp link $VMID $ADDR $SLOT >> /var/log/vmlink.log ;
 
 # vary the disk online
 echo 1 > /sys/bus/ccw/devices/0.0.$SLOT/online ; RC=$?
@@ -42,10 +40,10 @@ else echo "disk is online at $SLOT" >> /var/log/vmlink.log ; fi
 NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.) ; RC=$?
 if [ $RC -ne 0 ] ; then echo "check the block name manually" >> /var/log/vmlink.log ; else echo "block name is $NAME" >> /var/log/vmlink.log ; fi
 
-if [ ! -d $KEY ] ; then mkdir $KEY ; fi
+if [ ! -d $KEY ] ; then mkdir $KEY ; else rm -rf $KEY/* ; fi
 
 # mount the block name to a random directory
-mount -r /dev/$NAME $KEY >> /var/log/vmlink.log ; RC=$?
+mount -o ro,norecovery /dev/${NAME}${PARTITION} $KEY >> /var/log/vmlink.log ; RC=$?
 # if [ $RC -ne 0 ] ; then echo "mount manually" ; fi
 
 exit
