@@ -21,9 +21,9 @@ echo $SLOT >> /var/log/vmlink.log
 
 KEY=$1 >> /var/log/vmlink.log
 # parsing the key given into vmid, address and partition
-VMID=$(echo $KEY | awk -F. '{print $1}')
-ADDR=$(echo $KEY | awk -F. '{print $2}')
-PARTITION=$(echo $KEY | awk -F. '{print $3}')
+VMID=`echo $KEY | awk -F. '{print $1}'`
+ADDR=`echo $KEY | awk -F. '{print $2}'`
+PARTITION=`echo $KEY | awk -F. '{print $3}'`
 
 echo $VMID >> /var/log/vmlink.log
 echo $ADDR >> /var/log/vmlink.log
@@ -39,7 +39,7 @@ if [ $RC -ne 0 ] ; then echo "please use chccwdev command to make the disk onlin
 else echo "disk is online at $SLOT" >> /var/log/vmlink.log ; fi
 
 # find the block name assigned to it
-NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.) ; RC=$?
+NAME=`ls /sys/bus/ccw/devices/0.0.$SLOT/block/.` ; RC=$?
 if [ $RC -ne 0 ] ; then echo "check the block name manually" >> /var/log/vmlink.log ; else echo "block name is $NAME" >> /var/log/vmlink.log ; fi
 
 if [ ! -d $KEY ] ; then mkdir $KEY ; else rm -rf $KEY/* ; fi
