@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# random check
+if [ "$*" = "*" ] ; then exit 1 ; fi
+
 date '+# %Y-%m-%d %H:%M:%S' >> /var/log/vmlink.log
 
 # arbitrary address
@@ -12,6 +15,7 @@ while true ; do
 
   # if exit code is not 0
   if [ $RC -ne 0 ] ; then break ; fi
+
   # update the address  
   SLOT=`expr $SLOT + 1`
 done
@@ -21,9 +25,9 @@ echo $SLOT >> /var/log/vmlink.log
 
 KEY=$1 >> /var/log/vmlink.log
 # parsing the key given into vmid, address and partition
-VMID=$(echo $KEY | awk -F. '{print $1}')
-ADDR=$(echo $KEY | awk -F. '{print $2}')
-PARTITION=$(echo $KEY | awk -F. '{print $3}')
+VMID=`echo $KEY | awk -F. '{print $1}'`
+ADDR=`echo $KEY | awk -F. '{print $2}'`
+PARTITION=`echo $KEY | awk -F. '{print $3}'`
 
 echo $VMID >> /var/log/vmlink.log
 echo $ADDR >> /var/log/vmlink.log
@@ -31,29 +35,49 @@ echo $PARTITION >> /var/log/vmlink.log
 
 
 # link the given key to the address which is empty
-vmcp link $VMID $ADDR $SLOT >> /var/log/vmlink.log ;
+vmcp link $VMID $ADDR $SLOT >> /var/log/vmlink.log ; RC=$?
+if [ $RC -ne 0 ] ; then 
+  echo "auto.vmlink: exiting because link to the $SLOT address didn't happen" >> /var/log/vmlink.log
+  exit 32
+fi
+
+# just wait for sometime to come it online
+sync ; sleep 1 ; sync
 
 # vary the disk online
 echo 1 > /sys/bus/ccw/devices/0.0.$SLOT/online ; RC=$?
-if [ $RC -ne 0 ] ; then echo "please use chccwdev command to make the disk online" >> /var/log/vmlink.log
-else echo "disk is online at $SLOT" >> /var/log/vmlink.log ; fi
+if [ $RC -ne 0 ] ; then 
+  # trying out different way
+  chccwdev -e 0.0.$SLOT 1> /dev/null 2> /dev/null
+  if [ $? -ne 0 ] ; then 
+    echo "auto.vmlink: exiting because control file was never created" >> /var/log/vmlink.log
+    exit 32
+  fi
+fi
+
+# just wait for more time to edit the control file
+sync ; sleep 1 ; sync
 
 # find the block name assigned to it
-NAME=$(ls /sys/bus/ccw/devices/0.0.$SLOT/block/.) ; RC=$?
-if [ $RC -ne 0 ] ; then echo "check the block name manually" >> /var/log/vmlink.log ; else echo "block name is $NAME" >> /var/log/vmlink.log ; fi
+NAME=`ls -d /sys/bus/ccw/devices/0.0.$SLOT/block* | head -1`
+if [ -h "$NAME" ] ; then
+  NAME=`ls -ld $NAME | xargs -n 1 | tail -1 | xargs basename`
+elif [ -d "$NAME" ] ; then
+  NAME=`ls $NAME | head -1`
+fi
 
-if [ ! -d $KEY ] ; then mkdir $KEY ; else rm -rf $KEY/* ; fi
+if [ ! -d $KEY ] ; then mkdir -p -m 555 $KEY ; else rm -rf $KEY/* ; fi
 
 # mount the block name to a random directory
 mount -o ro /dev/${NAME}${PARTITION} $KEY ; RC=$?
-echo "\$?=$RC" >> /var/log/vmlink.log
-mount -o ro /dev/${NAME}${PARTITION} $KEY >> /var/log/vmlink.log
 
 if [ $RC -ne 0 ] ; then
   PARTITION=1
-  mount -o ro /dev/${NAME}${PARTITION} $KEY >> /var/log/vmlink.log
+  mount -o ro /dev/${NAME}${PARTITION} $KEY ; RC="$?"
 fi
 
-# if [ $RC -ne 0 ] ; then echo "mount manually" ; fi
+if [ $RC -ne 0 ] ; then 
+  echo "auto.vmlink: failed to mount, check kernel messages(using dmesg | less) or log file in /var/log/vmlink" 
+fi
 
 exit
