@@ -77,7 +77,7 @@ if [ $RC -ne 0 ] ; then
 fi
 
 if [ $RC -ne 0 ] ; then 
-  echo "auto.vmlink: failed to mount, check kernel messages(using dmesg | less) or log file in /var/log/vmlink" 
+  echo "auto.vmlink: failed to mount, check kernel messages(using dmesg | less) or log file in /var/log/vmlink" >> /var/log/vmlink.log 
 fi
 
 exit
