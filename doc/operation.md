@@ -10,6 +10,7 @@ The basic flow is as follows:
 * if the link was successful, then the script varies the new disk (local address) online
 * if the online was successful, the script must find the block device assigned
 * if the block device was found, the script finally attempts to mount it (or a partition)
+* all the logs been stored by the help of logger command and then SYSLOG takes care of them
 
 ## Clean-up:
 
