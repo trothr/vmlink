@@ -41,7 +41,6 @@ VMID=`echo $KEY | awk -F. '{print $1}'`
 ADDR=`echo $KEY | awk -F. '{print $2}'`
 PARTITION=`echo $KEY | awk -F. '{print $3}'`
 
-
 # link the given key to the address which is empty
 LINKED=`vmcp link $VMID $ADDR $SLOT` ; RC=$?
 logger "$LINKED"
@@ -58,6 +57,8 @@ echo 1 > /sys/bus/ccw/devices/0.0.$SLOT/online ; RC=$?
 if [ $RC -ne 0 ] ; then 
   # trying out different way
   chccwdev -e 0.0.$SLOT 1> /dev/null 2> /dev/null
+  if [ $? -ne 0 ] ; then
+    chzdev --enable dasd $SLOT 1> /dev/null 2> /dev/null ; fi
   if [ $? -ne 0 ] ; then 
     logger "auto.vmlink: exiting because control file was never created"
     exit 32
