@@ -8,8 +8,8 @@ devices of (specifically disks owned by) other virtual machines.
 ## VMLINK Automounter
 
 Consider automounter point `/vmlink`, similar to `/misc` and `/net`.
-Under `/vmlink`, one can have target directories ("keys" in automounter speak)
-named *vmid.addr* where "vmid" is the owning virtual machine
+Under `/vmlink`, one can have target directories ("keys" in automounter
+speak) named *vmid.addr* where "vmid" is the owning virtual machine
 and "addr" is the address of a disk on that virtual machine.
 
 ## cd /vmlink/yourvm.yourdisk
@@ -27,21 +27,15 @@ is not required for activating such references once authorized.
 
 In other words, you must be granted the right to use another disk,
 but once authorized you do not have to engage the administrator
-to use a disk for which you are authorized.
+to use a disk for which you are authorized. (The VM admin
+does not have to perform the "attach", which we call "link.)
 
 ## VMLINK Project
 
-Rushal Verma is developing the VMLINK automounter script as an intern project
-under the Linux Foundation. Weekly status is maintained here:
+Rushal Verma developed the VMLINK automounter script
+as an intern project under the Linux Foundation.
 
-https://docs.google.com/document/d/1E1UOcMKoqYWU_cfNOGwl8sFxOs5APxe8CVb53m3Iv_Q
-
-https://drive.google.com/drive/folders/1NtwHRFS1MFRy83vGJJmKNZyLxE6vVRxb?usp=sharing_eip&ts=5b0ca20f
-
-https://www.youtube.com/watch?v=VYOXuOg9tQI
-
-
-
-
+On CMS, `vmlink` is a command.
+On Linux, `/vmlink` is an automounter point.
 
 
