@@ -1,0 +1,11 @@
+
+    manifest                    this file
+    README.md                   README for the project in markdown
+    LICENSE.txt                 GPLv2
+    etc/auto.vmlink             the automounter script
+    etc/sysconfig/vmlink        the configuration file
+    doc/history.md
+    doc/operation.md
+    doc/requirements.md
+
+
