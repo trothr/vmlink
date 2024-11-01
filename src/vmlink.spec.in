@@ -1,0 +1,73 @@
+#
+#         Name: vmlink.spec[.in] (RPM package specs file)
+#               RPM package specs file for the VMLINK automounter
+#               http://ftp.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html
+#         Date: 2024-02-23 (Fri)
+#
+#   Build with:
+#               # make substitutions on this file, then:
+#               rpmbuild -bb --nodeps vmlink.spec
+#
+
+#%package %SPEC_APPLID%
+# The name line defines what the package will actually be called.
+Name: %SPEC_APPLID%
+Version: %SPEC_VERSION%
+Release: %SPEC_RELEASE%
+Summary: VMLINK automounter
+Group: Utilities/System
+Source: https://github.com/trothtech/vmlink/
+#Copyright: Casita.Net
+License: GPL
+#BuildRoot: /tmp/vmlink
+#Prefix: %SPEC_PREFIX%
+Provides: %SPEC_APPLID%
+## The distribution line identifies the product this package is part of.
+#Distribution: Casita.Net
+
+#URL: http://www.casita.net/pub/vmlink/vmlink.tar.gz
+#Vendor: La Casita en la Esquina
+#Packager: Sir Santa
+#Author: Rushal Verma
+
+%description
+The VMLINK automounter allows automatic access by users
+to properly authorized minidisks of other virtual machines.
+
+%prep
+true
+
+%build
+#CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
+#make
+mkdir -p $HOME/rpmbuild/BUILDROOT/%SPEC_APPLID%-%SPEC_VERSION%-%SPEC_RELEASE%.%SPEC_UNAMEM%/%SPEC_STAGING%
+rsync -a -u -x -H -O -S -v %SPEC_STAGING%/. $HOME/rpmbuild/BUILDROOT/%SPEC_APPLID%-%SPEC_VERSION%-%SPEC_RELEASE%.%SPEC_UNAMEM%/%SPEC_STAGING%/.
+
+%install
+mkdir -p $HOME/rpmbuild/BUILDROOT/%SPEC_APPLID%-%SPEC_VERSION%-%SPEC_RELEASE%.%SPEC_UNAMEM%/%SPEC_STAGING%
+rsync -a -u -x -H -O -S -v %SPEC_STAGING%/. $HOME/rpmbuild/BUILDROOT/%SPEC_APPLID%-%SPEC_VERSION%-%SPEC_RELEASE%.%SPEC_UNAMEM%/%SPEC_STAGING%/.
+
+#
+# The %files section is a list of the files that comprise the package.
+# If it isn't in the file list, it won't be put into the package.
+#%prefix %SPEC_PREFIX%
+%files
+#%defattr(-,root,root)
+%SPEC_STAGING%/etc/auto.vmlink
+%SPEC_STAGING%/etc/sysconfig/vmlink
+
+%clean
+true
+
+%post
+mkdir -m 555 /vmlink
+
+
+#dddd "s#%SPEC_PREFIX%#$PREFIX#g" >> vmlink.rpm.sed
+#dddd "s#%SPEC_APPLID%#$APPLID#g" >> vmlink.rpm.sed
+#dddd "s#%SPEC_VERSION%#$APPVRM#g" >> vmlink.rpm.sed
+#dddd "s#%SPEC_RELEASE%#$RPMSEQ#g" >> vmlink.rpm.sed
+#dddd "s#%SPEC_UNAMEM%#$UNAMEM#g" >> vmlink.rpm.sed
+#dddd "s#%SPEC_STAGING%#$STAGING#g" >> vmlink.rpm.sed
+
+
