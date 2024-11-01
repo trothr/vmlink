@@ -7,5 +7,9 @@
     doc/history.md
     doc/operation.md
     doc/requirements.md
+    src/makefile                rules file for 'make'
+    src/configure               dummy 'configure' script for standard recipe
+    src/vmlink.spec.in          skeletal input for generating vmlink.spec
+    src/rpmbuild.sh             shell script to build an RPM of the package
 
 

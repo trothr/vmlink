@@ -20,22 +20,22 @@ and then mount it at the named location under the automounter point.
 
 ## VMLINK Concept
 
-VMLINK automates referencing disks of other virtual machines
-on demand of the "client" guest. Host administrative action
-is required for authorizing such references. Host administration
-is not required for activating such references once authorized.
+VMLINK automates referencing disks of other virtual machines on demand.
+The "client" or guest (virtual machine) initiates the connection.
+Host administrative action is required for authorizing such references.
+Host administration is *not* required for activating such references once authorized.
 
-In other words, you must be granted the right to use another disk,
-but once authorized you do not have to engage the administrator
-to use a disk for which you are authorized. (The VM admin
-does not have to perform the "attach", which we call "link.)
+In other words, your virtual machine must be granted the right
+to use another disk, but once authorized you do not have to engage
+the administrator to use a disk for which you are authorized.
+(The VM admin does not have to perform the "attach", which we call "link".)
 
 ## VMLINK Project
 
 Rushal Verma developed the VMLINK automounter script
 as an intern project under the Linux Foundation.
 
-On CMS, `vmlink` is a command.
+On CMS, `vmlink` is a command. <br/>
 On Linux, `/vmlink` is an automounter point.
 
 

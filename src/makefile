@@ -25,7 +25,7 @@ vmlink.rpm:
 	./rpmbuild.sh $(APPLID) $(VERSION)
 
 clean:
-	rm -f *.rpm *.log
+	rm -f *.rpm *.log vmlink.spec
 
 distclean:
 	@$(MAKE) clean
